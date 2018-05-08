@@ -52,65 +52,79 @@ var Queue = Events.extend({
         the[_options] = object.assign({}, defaults, options);
     },
 
+    /**
+     * 添加工作进队列尾部
+     * @param work
+     * @returns {Queue}
+     */
     push: function (work) {
         return this[_wait]('push', work);
     },
 
+    /**
+     * 添加工作进队列首部
+     * @param work
+     * @returns {Queue}
+     */
     unshift: function (work) {
         return this[_wait]('unshift', work);
     },
 
+    /**
+     * 开始工作
+     * @returns {Queue}
+     */
     start: function () {
         var the = this;
 
-        if (the[_running]) {
-            throw new TypeError('队列正在执行');
+        if (the[_state] === STATE_WAITING) {
+            the[_run]();
+            return the;
         }
-
-        the[_running] = true;
-        the[_run]();
 
         return the;
     },
 
+    /**
+     * 暂停工作
+     * @returns {Queue}
+     */
     pause: function () {
         var the = this;
 
-        if (!the[_running]) {
-            throw new TypeError('队列未执行');
+        if (the[_state] === STATE_RUNNING) {
+            the[_state] = STATE_WAITING;
+            return the;
         }
-
-        the[_running] = false;
 
         return the;
     },
 
+    /**
+     * 恢复工作
+     * @returns {Queue}
+     */
     resume: function () {
-        var the = this;
-
-        if (the[_running]) {
-            throw new TypeError('队列正在执行');
-        }
-
-        the[_running] = false;
-
-        return the;
+        return this.start();
     },
 
+    /**
+     * 停止工作
+     * @returns {Queue}
+     */
     stop: function () {
         var the = this;
 
-        if (!the[_running]) {
-            throw new TypeError('队列未执行');
-        }
-
-        the[_running] = false;
+        the[_state] = STATE_ENDDING;
         the[_waitingList] = [];
         the.length = 0;
 
         return the;
     },
 
+    /**
+     * 销毁队列
+     */
     destroy: function () {
         var the = this;
 
@@ -156,6 +170,7 @@ proto[_run] = function () {
     if (!the[_waitingList].length) {
         // 非无限
         if (!options.infinite) {
+            the[_state] = STATE_ENDDING;
             the.emit('end');
         }
 
