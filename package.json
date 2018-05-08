@@ -37,10 +37,14 @@
   "bugs": {
     "url": "https://github.com/blearjs/blear.classes.queue/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "blear.classes.events": "^1.0.7",
+    "blear.utils.object": "^1.0.14"
+  },
   "peerDependencies": {},
   "devDependencies": {
     "chai-jasmine": "1.0.7",
+    "coolie.js": "^2.2.3",
     "istanbul": "0.4.5",
     "mocha": "4.0.1"
   },
