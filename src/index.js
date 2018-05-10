@@ -14,7 +14,6 @@ var object = require('blear.utils.object');
 var STATE_WAITING = 0;
 var STATE_RUNNING = 1;
 var STATE_ENDDING = 2;
-var state = 0;
 var defaults = {
     /**
      * 并发数量
@@ -139,6 +138,7 @@ var _workingLength = sole();
 var _waitingList = sole();
 var _wait = sole();
 var _run = sole();
+var _work = sole();
 var _running = sole();
 var _state = sole();
 
@@ -146,14 +146,17 @@ proto[_wait] = function (method, work) {
     var the = this;
 
     if (the[_state] === STATE_ENDDING) {
-        throw new Error('队列已停止');
+        return;
     }
 
-    the[_waitingList][method]({
-        work: work,
-        id: workId()
-    });
+    the[_waitingList][method](work);
     the.length++;
+
+    // 无限队列自动运行
+    if (the[_options].infinite && the[_state] === STATE_RUNNING) {
+        the[_run]();
+    }
+
     return the;
 };
 
@@ -162,18 +165,12 @@ proto[_run] = function () {
     var options = the[_options];
 
     // 1. 判断执行标记
-    if (!the[_running]) {
+    if (!the[_state] === STATE_ENDDING) {
         return;
     }
 
     // 2. 判断当前等待任务的数量
     if (!the[_waitingList].length) {
-        // 非无限
-        if (!options.infinite) {
-            the[_state] = STATE_ENDDING;
-            the.emit('end');
-        }
-
         return;
     }
 
@@ -182,17 +179,33 @@ proto[_run] = function () {
         return;
     }
 
-    // 4. 获取一个可以执行的工作开始执行
-    var waiter = the[_waitingList].shift();
-    var work = waiter.work;
-    var id = waiter.id;
+    the[_state] = STATE_RUNNING;
 
-    the.emit('beforeWork', work, id);
+    // 4. 获取一个可以执行的工作开始执行
+    the[_work]();
+
+    // 5. 继续执行，直到并发达到上限
+    the[_run]();
+};
+
+proto[_work] = function () {
+    var the = this;
+    var options = the[_options];
+    var work = the[_waitingList].shift();
+
+    the.emit('beforeWork', work);
     the.length--;
     the[_workingLength]++;
     work(function () {
-        the.emit('afterWork', work, id);
+        the.emit('afterWork', work);
         the[_workingLength]--;
+
+        // 非无限 && 等待列表为空 && 工作长度为0
+        if (!options.infinite && the[_waitingList].length === 0 && the[_workingLength] === 0) {
+            the[_state] = STATE_ENDDING;
+            the.emit('end');
+        }
+
         the[_run]();
     });
 };

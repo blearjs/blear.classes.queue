@@ -12,7 +12,7 @@ var Queue = require('../src/index');
 var random = require('./random');
 
 var q = new Queue({
-    concurrence: 1
+    concurrence: 3
 });
 
 var time1 = 0;
