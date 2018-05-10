@@ -15,59 +15,23 @@ describe('blear.classes.queue', function () {
     it('#push', function (done) {
         var q = new Queue();
 
-        q.push(function (done) {
-            done();
-        });
-
+        q.push(1);
         expect(q.length).toBe(1);
+        q.stop();
+        q.push(2);
+        expect(q.length).toBe(0);
         done();
     });
 
     it('#unshift', function (done) {
         var q = new Queue();
 
-        q.unshift(function (done) {
-            done();
-        });
-
+        q.unshift(1);
         expect(q.length).toBe(1);
+        q.destroy();
+        q.unshift(2);
+        expect(q.length).toBe(0);
         done();
-    });
-
-    it('order', function (done) {
-        var q = new Queue();
-        var list = [];
-
-        q.push(function (done) {
-            setTimeout(function () {
-                list.push(1);
-                done();
-            });
-        });
-
-        q.unshift(function (done) {
-            setTimeout(function () {
-                list.push(2);
-                done();
-            });
-        });
-
-        q.push(function (done) {
-            setTimeout(function () {
-                list.push(3);
-                done();
-            });
-        });
-
-        expect(q.length).toBe(3);
-        q.start();
-        q.on('end', function () {
-            expect(list.length).toBe(3);
-            expect(list[0]).toBe(2);
-            expect(list[1]).toBe(1);
-            expect(list[2]).toBe(3);
-            done();
-        });
     });
 
 });

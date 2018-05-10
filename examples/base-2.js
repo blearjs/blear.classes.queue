@@ -36,6 +36,23 @@ $('start').onclick = function () {
     startTime = Date.now();
 };
 
+$('pause').onclick = function () {
+    q.pause();
+};
+
+$('resume').onclick = function () {
+    q.resume();
+};
+
+$('clear').onclick = function () {
+    $('ret1').innerHTML += '<p>--------- 队列清除 ----------</p>';
+    q.clear();
+};
+
+$('stop').onclick = function () {
+    q.stop();
+};
+
 q.on('afterWork', log2);
 q.on('end', logEnd);
 

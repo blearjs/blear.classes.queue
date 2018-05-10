@@ -77,6 +77,7 @@ var Queue = Events.extend({
         var the = this;
 
         if (the[_state] === STATE_WAITING) {
+            the[_state] = STATE_RUNNING;
             the[_run]();
             return the;
         }
@@ -108,6 +109,19 @@ var Queue = Events.extend({
     },
 
     /**
+     * 清除队列
+     * @returns {Queue}
+     */
+    clear: function () {
+        var the = this;
+
+        the[_waitingList] = [];
+        the.length = 0;
+
+        return the;
+    },
+
+    /**
      * 停止工作
      * @returns {Queue}
      */
@@ -115,8 +129,7 @@ var Queue = Events.extend({
         var the = this;
 
         the[_state] = STATE_ENDDING;
-        the[_waitingList] = [];
-        the.length = 0;
+        the.clear();
 
         return the;
     },
@@ -165,7 +178,7 @@ proto[_run] = function () {
     var options = the[_options];
 
     // 1. 判断执行标记
-    if (!the[_state] === STATE_ENDDING) {
+    if (the[_state] !== STATE_RUNNING) {
         return;
     }
 
@@ -182,8 +195,6 @@ proto[_run] = function () {
     if (the[_workingLength] >= options.concurrence) {
         return;
     }
-
-    the[_state] = STATE_RUNNING;
 
     // 4. 获取一个可以执行的工作开始执行
     the[_work]();
@@ -217,10 +228,3 @@ proto[_work] = function () {
 Queue.defaults = defaults;
 module.exports = Queue;
 
-
-// ===================================================
-var id = 1;
-
-function workId() {
-    return id++;
-}
