@@ -2,6 +2,7 @@
  * blear.classes.queue
  * @author ydr.me
  * @create 2018年05月07日10:12:42
+ * @update 2018年05月10日17:20:00
  */
 
 
@@ -70,7 +71,7 @@ var Queue = Events.extend({
     },
 
     /**
-     * 开始工作
+     * 开始队列
      * @returns {Queue}
      */
     start: function () {
@@ -86,7 +87,7 @@ var Queue = Events.extend({
     },
 
     /**
-     * 暂停工作
+     * 暂停队列
      * @returns {Queue}
      */
     pause: function () {
@@ -101,7 +102,7 @@ var Queue = Events.extend({
     },
 
     /**
-     * 恢复工作
+     * 恢复队列
      * @returns {Queue}
      */
     resume: function () {
