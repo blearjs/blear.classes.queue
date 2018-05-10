@@ -171,6 +171,10 @@ proto[_run] = function () {
 
     // 2. 判断当前等待任务的数量
     if (!the[_waitingList].length) {
+        // 无限队列自动运行
+        if (the[_options].infinite) {
+            the[_state] = STATE_RUNNING;
+        }
         return;
     }
 

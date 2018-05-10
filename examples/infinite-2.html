@@ -1,0 +1,60 @@
+<!doctype html>
+
+<style>
+    button{
+        padding: 4px 8px;
+    }
+
+    .output {
+        padding: 10px;
+        float: left;
+        line-height: 1.5;
+        width: 40%;
+        font-size: 12px;
+    }
+
+    .output p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .time {
+        font-size: 16px;
+        font-weight: 900;
+        margin: 0 4px;
+    }
+
+    #ret1 {
+        border: 1px solid #f09838;
+        background: #fbe4ad;
+        color: #150a9f;
+    }
+
+    #ret2 {
+        border: 1px solid #6476f0;
+        background: #d5d7ef;
+        color: #9f191b;
+        margin-left: 10px;
+    }
+</style>
+
+<h1>无限队列：并发=3</h1>
+
+<p>点击 work 之后可以在控制台看到当前等待的队列列表</p>
+
+<button id="push">push work</button>
+<button id="start">start queue</button>
+
+<hr>
+
+<div id="ret1" class="output">
+    <p>任务总时长<b id="time1" class="time">0</b>ms</p>
+</div>
+<div id="ret2" class="output">
+    <p>执行总时长<b id="time2" class="time">0</b>ms</p>
+</div>
+
+
+<script coolie src="/node_modules/coolie.js/coolie.js"
+data-config="/examples/coolie-config.js"
+data-main="infinite-2.js"></script>
