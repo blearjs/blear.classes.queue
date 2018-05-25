@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="UTF-8">
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    table {
+        border: 1px solid #000000;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td {
+        border: 1px solid #000000;
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    button {
+        padding: 6px 12px;
+        vertical-align: middle;
+        margin-left: 10px;
+    }
+
+    pre {
+        background: #eee;
+        padding: 10px;
+        line-height: 1.5;
+        font-size: 12px;
+        max-height: 400px;
+        overflow: auto;
+    }
+
+    p {
+        padding: 5px;
+    }
+
+    .sending {
+        background: #f1ae10;
+        color: #fff;
+    }
+
+    .sended {
+        color: #b7b7b7;
+    }
+</style>
+
+
+<table>
+    <tr>
+        <td width="50%">
+            <h1>已发送
+                <button id="start">启动</button>
+            </h1>
+            <pre id="log1"></pre>
+        </td>
+        <td width="50%">
+            <h1>待发送
+                <button id="add">添加邮箱</button>
+            </h1>
+            <pre id="log2"></pre>
+        </td>
+    </tr>
+</table>
+
+
+<script coolie src="/node_modules/coolie.js/coolie.js"
+        data-config="/examples/coolie-config.js"
+        data-main="mail.js"></script>
